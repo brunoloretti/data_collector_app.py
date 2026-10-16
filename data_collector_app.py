@@ -4,67 +4,76 @@ from datetime import datetime
 
 st.set_page_config(page_title="Coleta Rápida - SAC & PRICE", page_icon="⚡", layout="centered")
 
-# Forçando o tamanho gigante extremo nas fontes e cores sólidas de fundo
+# O grande truque aqui é usar o 'type' do botão do Streamlit para aplicar o CSS infalivelmente, 
+# e usar o seletor universal (*) dentro do botão para garantir que o texto não seja sobrescrito.
 st.markdown("""
     <style>
-    /* Estilo geral e tamanho monstruoso para os botões e textos */
+    /* Aumentando drasticamente o tamanho do botão */
     div.stButton > button {
-        width: 100% !important;
-        height: 180px !important;
-        border-radius: 30px !important;
-        border: none !important;
-        box-shadow: 0px 10px 25px rgba(0,0,0,0.35) !important;
-        transition: 0.1s ease-in-out !important;
+        height: 250px !important; /* Altura massiva */
+        border-radius: 40px !important;
+        box-shadow: 0px 15px 30px rgba(0,0,0,0.4) !important;
+        transition: all 0.1s ease-in-out !important;
     }
     div.stButton > button:active {
-        transform: scale(0.94) !important;
+        transform: scale(0.92) !important;
     }
 
-    /* Coluna 1: SAC -> Fundo Roxo e Texto GIGANTE */
-    div[data-testid="column"]:nth-of-type(1) button {
-        background-color: #7B1FA2 !important;
+    /* TRUQUE: Botão SAC será do tipo "primary" -> ROXO */
+    button[data-testid="baseButton-primary"] {
+        background-color: #8A2BE2 !important; 
+        border: 4px solid #5a1299 !important;
     }
-    div[data-testid="column"]:nth-of-type(1) button div p, 
-    div[data-testid="column"]:nth-of-type(1) button p,
-    div[data-testid="column"]:nth-of-type(1) button span {
-        font-size: 55px !important;
+    /* Força fonte GIGANTE em qualquer texto dentro do botão primário */
+    button[data-testid="baseButton-primary"] p,
+    button[data-testid="baseButton-primary"] span,
+    button[data-testid="baseButton-primary"] div,
+    button[data-testid="baseButton-primary"] * {
+        font-size: 85px !important;
+        font-weight: 1000 !important;
         color: #FFFFFF !important;
-        font-weight: 900 !important;
+        line-height: 1.1 !important;
+        text-transform: uppercase !important;
     }
 
-    /* Coluna 2: PRICE -> Fundo Verde e Texto GIGANTE */
-    div[data-testid="column"]:nth-of-type(2) button {
-        background-color: #1B5E20 !important;
+    /* TRUQUE: Botão PRICE será do tipo "secondary" -> VERDE */
+    button[data-testid="baseButton-secondary"] {
+        background-color: #2E7D32 !important; 
+        border: 4px solid #1a4d1e !important;
     }
-    div[data-testid="column"]:nth-of-type(2) button div p, 
-    div[data-testid="column"]:nth-of-type(2) button p,
-    div[data-testid="column"]:nth-of-type(2) button span {
-        font-size: 55px !important;
+    /* Força fonte GIGANTE em qualquer texto dentro do botão secundário */
+    button[data-testid="baseButton-secondary"] p,
+    button[data-testid="baseButton-secondary"] span,
+    button[data-testid="baseButton-secondary"] div,
+    button[data-testid="baseButton-secondary"] * {
+        font-size: 85px !important;
+        font-weight: 1000 !important;
         color: #FFFFFF !important;
-        font-weight: 900 !important;
+        line-height: 1.1 !important;
+        text-transform: uppercase !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-st.title("⚡ Coleta Rápida: SAC & PRICE")
-st.markdown("Toque no botão correspondente para registrar o dado instantaneamente.")
+st.title("⚡ Coleta Rápida")
 
 if "log" not in st.session_state:
     st.session_state.log = []
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Organizar os dois botões gigantes lado a lado
 col1, col2 = st.columns(2)
 
 with col1:
-    if st.button("SAC", use_container_width=True, key="btn_sac"):
+    # A mágica acontece aqui: type="primary" aciona o CSS do Roxo
+    if st.button("SAC", type="primary", use_container_width=True, key="btn_sac"):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         st.session_state.log.append({"Categoria": "SAC", "Timestamp": timestamp})
         st.toast("Registrado: SAC!", icon="✅")
 
 with col2:
-    if st.button("PRICE", use_container_width=True, key="btn_price"):
+    # A mágica acontece aqui: type="secondary" aciona o CSS do Verde
+    if st.button("PRICE", type="secondary", use_container_width=True, key="btn_price"):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         st.session_state.log.append({"Categoria": "PRICE", "Timestamp": timestamp})
         st.toast("Registrado: PRICE!", icon="✅")
@@ -84,7 +93,7 @@ if st.session_state.log:
         st.download_button(
             label="📥 Baixar Dados (CSV)",
             data=csv,
-            file_name=f"coleta_sac_price_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+            file_name=f"coleta_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
             mime="text/csv",
             use_container_width=True
         )
@@ -93,4 +102,4 @@ if st.session_state.log:
             st.session_state.log = []
             st.rerun()
 else:
-    st.info("Nenhum dado coletado ainda. Toque em SAC ou PRICE acima para começar.")
+    st.info("Nenhum dado coletado ainda.")
