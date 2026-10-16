@@ -4,38 +4,42 @@ from datetime import datetime
 
 st.set_page_config(page_title="Coleta Rápida - SAC & PRICE", page_icon="⚡", layout="centered")
 
-# Estilização visual para botões gigantes, com fundo Roxo (SAC) e Verde (PRICE)
+# Forçando o tamanho gigante extremo nas fontes e cores sólidas de fundo
 st.markdown("""
     <style>
-    /* Estilo padrão e tamanho dos botões */
+    /* Estilo geral e tamanho monstruoso para os botões e textos */
     div.stButton > button {
         width: 100% !important;
-        height: 150px !important;
-        border-radius: 25px !important;
+        height: 180px !important;
+        border-radius: 30px !important;
         border: none !important;
-        box-shadow: 0px 8px 20px rgba(0,0,0,0.3) !important;
+        box-shadow: 0px 10px 25px rgba(0,0,0,0.35) !important;
         transition: 0.1s ease-in-out !important;
     }
     div.stButton > button:active {
-        transform: scale(0.95) !important;
+        transform: scale(0.94) !important;
     }
 
-    /* Coluna 1: SAC -> Fundo Roxo e Letras Gigantes Brancas */
+    /* Coluna 1: SAC -> Fundo Roxo e Texto GIGANTE */
     div[data-testid="column"]:nth-of-type(1) button {
-        background-color: #8A2BE2 !important;
+        background-color: #7B1FA2 !important;
     }
-    div[data-testid="column"]:nth-of-type(1) button p {
-        font-size: 42px !important;
+    div[data-testid="column"]:nth-of-type(1) button div p, 
+    div[data-testid="column"]:nth-of-type(1) button p,
+    div[data-testid="column"]:nth-of-type(1) button span {
+        font-size: 55px !important;
         color: #FFFFFF !important;
         font-weight: 900 !important;
     }
 
-    /* Coluna 2: PRICE -> Fundo Verde e Letras Gigantes Brancas */
+    /* Coluna 2: PRICE -> Fundo Verde e Texto GIGANTE */
     div[data-testid="column"]:nth-of-type(2) button {
-        background-color: #2E7D32 !important;
+        background-color: #1B5E20 !important;
     }
-    div[data-testid="column"]:nth-of-type(2) button p {
-        font-size: 42px !important;
+    div[data-testid="column"]:nth-of-type(2) button div p, 
+    div[data-testid="column"]:nth-of-type(2) button p,
+    div[data-testid="column"]:nth-of-type(2) button span {
+        font-size: 55px !important;
         color: #FFFFFF !important;
         font-weight: 900 !important;
     }
@@ -50,7 +54,7 @@ if "log" not in st.session_state:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Organizar os dois botões grandes lado a lado
+# Organizar os dois botões gigantes lado a lado
 col1, col2 = st.columns(2)
 
 with col1:
